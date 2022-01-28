@@ -6,6 +6,12 @@ license = "MIT/Apache-2.0"
 description = "MIIO protocol implementation."
 keywords = ["miio", "networking", "protocol"]
 authors = ["Evgenii Lepikhin"]
+repository = "https://github.com/johnlepikhin/miio-proto"
+categories = ["api-bindings"]
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+]
 
 [dependencies]
 log = "*"
