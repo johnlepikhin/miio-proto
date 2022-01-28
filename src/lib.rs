@@ -1,32 +1,32 @@
-/// Crate implements MIIO protocol which is used to control Xiaomi devices over WiFi/UDP.
-///
-/// Some useful links:
-/// * `<https://github.com/marcelrv/XiaomiRobotVacuumProtocol/blob/master/Protocol.md>` - Packet format
-/// * `<https://github.com/marcelrv/XiaomiRobotVacuumProtocol>` - Xiaomi Vacuum cleaner JSON commands
-///
-/// # Simple example
-///
-/// ```
-/// let conn = Device::new(
-///     "192.168.1.1:54321",
-///     1234512345,
-///     [
-///         0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0x00, 0xaa, 0xbb, 0xcc, 0xdd,
-///         0xee, 0xff,
-///     ],
-/// )
-/// .await
-/// .expect("Connect");
-/// conn.send_handshake().await.expect("Handshake");
-/// let (hello, _) = conn.recv().await.expect("Response");
-///
-/// conn.send(
-///     hello.stamp + 1,
-///     "{\"method\":\"power\",\"id\":1,\"params\":[\"off\"]}",
-/// )
-/// .await
-/// .expect("Request");
-/// ```
+//! Crate implements MIIO protocol which is used to control Xiaomi devices over WiFi/UDP.
+//!
+//! Some useful links:
+//! * `<https://github.com/marcelrv/XiaomiRobotVacuumProtocol/blob/master/Protocol.md>` - Packet format
+//! * `<https://github.com/marcelrv/XiaomiRobotVacuumProtocol>` - Xiaomi Vacuum cleaner JSON commands
+//!
+//! # Simple example
+//!
+//! ```
+//! let conn = Device::new(
+//!     "192.168.1.1:54321",
+//!     1234512345,
+//!     [
+//!         0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0x00, 0xaa, 0xbb, 0xcc, 0xdd,
+//!         0xee, 0xff,
+//!     ],
+//! )
+//! .await
+//! .expect("Connect");
+//! conn.send_handshake().await.expect("Handshake");
+//! let (hello, _) = conn.recv().await.expect("Response");
+//!
+//! conn.send(
+//!     hello.stamp + 1,
+//!     "{\"method\":\"power\",\"id\":1,\"params\":[\"off\"]}",
+//! )
+//! .await
+//! .expect("Request");
+//! ```
 use anyhow::Result;
 use packed_struct::prelude::*;
 use tokio::net::UdpSocket;
