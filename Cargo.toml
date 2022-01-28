@@ -1,0 +1,17 @@
+[package]
+name = "miio-proto"
+version = "0.1.0"
+edition = "2021"
+license = "MIT/Apache-2.0"
+description = "MIIO protocol implementation."
+keywords = ["miio", "networking", "protocol"]
+authors = ["Evgenii Lepikhin"]
+
+[dependencies]
+log = "*"
+tokio = { version = "1", features = ["full"] }
+anyhow = "*"
+packed_struct = "0"
+md5 = "0"
+block-modes = "0"
+aes = "0"
