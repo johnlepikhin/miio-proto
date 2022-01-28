@@ -1,50 +1,72 @@
 //! Crate implements MIIO protocol which is used to control Xiaomi devices over WiFi/UDP.
 //!
 //! Some useful links:
-//! * `<https://github.com/marcelrv/XiaomiRobotVacuumProtocol/blob/master/Protocol.md>` - Packet format
-//! * `<https://github.com/marcelrv/XiaomiRobotVacuumProtocol>` - Xiaomi Vacuum cleaner JSON commands
+//! * `https://github.com/marcelrv/XiaomiRobotVacuumProtocol/blob/master/Protocol.md` - Packet format
+//! * `https://github.com/marcelrv/XiaomiRobotVacuumProtocol` - Xiaomi Vacuum cleaner JSON commands
 //!
 //! # Simple example
 //!
-//! ```
-//! let conn = Device::new(
-//!     "192.168.1.1:54321",
-//!     1234512345,
-//!     [
-//!         0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0x00, 0xaa, 0xbb, 0xcc, 0xdd,
-//!         0xee, 0xff,
-//!     ],
-//! )
-//! .await
-//! .expect("Connect");
-//! conn.send_handshake().await.expect("Handshake");
-//! let (hello, _) = conn.recv().await.expect("Response");
+//! ```no_run
+//! use miio_proto::Device;
 //!
-//! conn.send(
-//!     hello.stamp + 1,
-//!     "{\"method\":\"power\",\"id\":1,\"params\":[\"off\"]}",
-//! )
-//! .await
-//! .expect("Request");
+//! fn main() {
+//!     let rt = tokio::runtime::Runtime::new().expect("Async runtime");
+//!     rt.block_on(async {
+//!         let conn = Device::new(
+//!             "192.168.1.1:54321",
+//!             1234512345,
+//!             [
+//!                 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0x00, 0xaa, 0xbb, 0xcc, 0xdd,
+//!                 0xee, 0xff,
+//!             ],
+//!         )
+//!         .await
+//!         .expect("Connect");
+//!         conn.send_handshake().await.expect("Handshake");
+//!         let (hello, _) = conn.recv().await.expect("Response");
+//!
+//!         conn.send(
+//!             hello.stamp + 1,
+//!             "{'method':'power','id':1,'params':['off']}",
+//!         )
+//!         .await
+//!         .expect("Request");
+//!     })
+//! }
 //! ```
+
+#![warn(rust_2018_idioms)]
+#![deny(missing_docs)]
+
 use anyhow::Result;
 use packed_struct::prelude::*;
 use tokio::net::UdpSocket;
 
 #[derive(PackedStruct, Debug, Clone)]
 #[packed_struct(endian = "msb")]
+/// Struct describes protocol message header
 pub struct MessageHeader {
+    /// Always 0x2131
     pub magic_number: u16,
+    /// Packet length including the header itself (32 bytes)
     pub packet_length: u16,
+    /// Some unknown bytes
     pub unknown: u32,
+    /// Device ID
     pub device_id: u32,
+    /// Incrementing timestamp as reported by device
     pub stamp: u32,
+    /// Checksum. See protocol description.
     pub checksum: [u8; 16],
 }
 
+/// Connection holder
 pub struct Device {
+    /// Socket
     socket: std::sync::Arc<UdpSocket>,
+    /// Device ID
     device_id: u32,
+    /// Device token
     token: [u8; 16],
 }
 
