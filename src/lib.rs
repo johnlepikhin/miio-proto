@@ -1,12 +1,8 @@
-use anyhow::Result;
-use packed_struct::prelude::*;
-use tokio::net::UdpSocket;
-
 /// Crate implements MIIO protocol which is used to control Xiaomi devices over WiFi/UDP.
 ///
 /// Some useful links:
-/// * https://github.com/marcelrv/XiaomiRobotVacuumProtocol/blob/master/Protocol.md - Packet format
-/// * https://github.com/marcelrv/XiaomiRobotVacuumProtocol - Xiaomi Vacuum cleaner JSON commands
+/// * `<https://github.com/marcelrv/XiaomiRobotVacuumProtocol/blob/master/Protocol.md>` - Packet format
+/// * `<https://github.com/marcelrv/XiaomiRobotVacuumProtocol>` - Xiaomi Vacuum cleaner JSON commands
 ///
 /// # Simple example
 ///
@@ -31,6 +27,9 @@ use tokio::net::UdpSocket;
 /// .await
 /// .expect("Request");
 /// ```
+use anyhow::Result;
+use packed_struct::prelude::*;
+use tokio::net::UdpSocket;
 
 #[derive(PackedStruct, Debug, Clone)]
 #[packed_struct(endian = "msb")]
