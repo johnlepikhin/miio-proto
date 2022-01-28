@@ -123,7 +123,7 @@ impl Device {
             unknown,
             device_id,
             stamp,
-            checksum: token.clone(),
+            checksum: *token,
         };
 
         let mut packet = message.pack_to_vec()?.pack_to_vec()?;
@@ -154,7 +154,7 @@ impl Device {
     /// * Message header
     /// * Decoded payload
     pub async fn recv(&self) -> Result<(MessageHeader, String)> {
-        let mut buf = [0 as u8; 65535];
+        let mut buf = [0_u8; 65535];
         self.socket.recv(&mut buf).await?;
         let mut hdr: [u8; 32] = Default::default();
         hdr.copy_from_slice(&buf[..32]);
