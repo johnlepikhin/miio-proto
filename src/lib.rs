@@ -1,32 +1,28 @@
 //! # Simple example
 //!
 //! ```no_run
-//! use miio_proto::Device;
+//! let rt = tokio::runtime::Runtime::new().expect("Async runtime");
+//! rt.block_on(async {
+//!     let conn = Device::new(
+//!         "192.168.1.1:54321",
+//!         1234512345,
+//!         [
+//!             0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0x00, 0xaa, 0xbb, 0xcc, 0xdd,
+//!             0xee, 0xff,
+//!         ],
+//!     )
+//!     .await
+//!     .expect("Connect");
+//!     conn.send_handshake().await.expect("Handshake");
+//!     let (hello, _) = conn.recv().await.expect("Response");
 //!
-//! fn main() {
-//!     let rt = tokio::runtime::Runtime::new().expect("Async runtime");
-//!     rt.block_on(async {
-//!         let conn = Device::new(
-//!             "192.168.1.1:54321",
-//!             1234512345,
-//!             [
-//!                 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0x00, 0xaa, 0xbb, 0xcc, 0xdd,
-//!                 0xee, 0xff,
-//!             ],
-//!         )
-//!         .await
-//!         .expect("Connect");
-//!         conn.send_handshake().await.expect("Handshake");
-//!         let (hello, _) = conn.recv().await.expect("Response");
-//!
-//!         conn.send(
-//!             hello.stamp + 1,
-//!             "{'method':'power','id':1,'params':['off']}",
-//!         )
-//!         .await
-//!         .expect("Request");
-//!     })
-//! }
+//!     conn.send(
+//!         hello.stamp + 1,
+//!         "{'method':'power','id':1,'params':['off']}",
+//!     )
+//!     .await
+//!     .expect("Request");
+//! })
 //! ```
 
 #![warn(rust_2018_idioms)]
