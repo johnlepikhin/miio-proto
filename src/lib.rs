@@ -177,12 +177,13 @@ impl Device {
         log::trace!("Got header: {:?}", resp);
         let payload = &buf[32..resp.packet_length as usize];
         log::trace!("Got payload len={}: {:?}", payload.len(), payload);
+        let payload = Self::decode_payload(&self.token, payload);
+        let payload = std::str::from_utf8(&payload)?;
         if !payload.is_empty() {
-            let payload = Self::decode_payload(&self.token, payload);
-            log::trace!("Decoded payload: {}", std::str::from_utf8(&payload)?);
+            log::trace!("Decoded payload: {}", payload);
         }
 
-        Ok((resp, "".to_string()))
+        Ok((resp, payload.to_string()))
     }
 
     /// Sends handshake packet to MIIO device.
