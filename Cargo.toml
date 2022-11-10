@@ -14,10 +14,10 @@ include = [
 ]
 
 [dependencies]
-log = "0"
+log = "0.4"
 tokio = { version = "1", features = ["full"] }
 anyhow = "1"
-packed_struct = "0"
-md5 = "0"
+packed_struct = "0.10"
+md5 = "0.7"
 block-modes = "0.8"
 aes = "0.7"
